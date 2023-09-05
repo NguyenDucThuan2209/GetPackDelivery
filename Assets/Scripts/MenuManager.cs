@@ -49,6 +49,7 @@ public class MenuManager : MonoBehaviour
     }
     public void OpenSetting()
     {
+        HideAllScreen();
         m_settingScreen.ShowScreen();
     }
     public void OpenPrivacyAndPolicy()
@@ -87,13 +88,10 @@ public class MenuManager : MonoBehaviour
         m_menuScreen.ShowScreen();
     }
 
-
-    public void SetScoreInGame(int score)
+    public void SetScore(int score, int highScore)
     {
         m_ingameScreen.SetScoreText(score);
-    }
-    public void SetScoreEndGame(int score, int highScore)
-    {
+        m_menuScreen.SetHighScore(highScore);
         m_endGameScreen.SetScoreText(score, highScore);
     }
     public void SetCharacterVisualID(int visualID)

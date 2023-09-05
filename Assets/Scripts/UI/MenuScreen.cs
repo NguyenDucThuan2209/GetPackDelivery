@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MenuScreen : UIScreen
 {
+    [SerializeField] Text m_bestScore;
+
     public void OnStartGameButtonPressed()
     {
         SoundManager.Instance.PlaySound("Click");
@@ -22,5 +24,10 @@ public class MenuScreen : UIScreen
         SoundManager.Instance.PlaySound("Click");
 
         MenuManager.Instance.OpenPrivacyAndPolicy();
+    }
+
+    public void SetHighScore(int highScore)
+    {
+        m_bestScore.text = "BEST " + highScore;
     }
 }

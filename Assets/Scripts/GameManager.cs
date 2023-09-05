@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float m_currentHeight;
     [SerializeField] float m_spawnHeightDiff;
 
+    private int m_visualID = 0;
     private Character m_player;
 
     public GameState State => m_state;
@@ -99,13 +100,15 @@ public class GameManager : MonoBehaviour
 
     public void SetCharacterVisualID(int characterVisualID)
     {
-        m_player.InitializeCharacter(characterVisualID);
+        m_visualID = characterVisualID;
     }
     public void ScorePoint()
     {
         m_score++;
+        m_bestScore = (m_bestScore < m_score) ? m_score : m_bestScore;
+
         SoundManager.Instance.PlaySound("Score");
-        MenuManager.Instance.SetScoreInGame(m_score);
+        MenuManager.Instance.SetScore(m_score, m_bestScore);
     }
 
     public void StartGame()
@@ -116,8 +119,9 @@ public class GameManager : MonoBehaviour
         m_state = GameState.Playing;
         m_mapHolder.gameObject.SetActive(true);
 
-        SpawnMap();
         m_player = Instantiate(m_playerPrefab, m_mapHolder);
+        m_player.InitializeCharacter(m_visualID);
+        SpawnMap();
     }
     public void PauseGame()
     {
