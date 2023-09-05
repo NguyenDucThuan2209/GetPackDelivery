@@ -14,7 +14,7 @@ public class PauseScreen : UIScreen
     public void OnReplayButtonPressed()
     {
         SoundManager.Instance.PlaySound("Click");
-        MenuManager.Instance.ReplayGame();
+        MenuManager.Instance.StartGame();
     }
     public void OnBackToMenuButtonPressed()
     {

@@ -16,10 +16,27 @@ public class GameManager : MonoBehaviour
     private static GameManager m_instance;
     public static GameManager Instance => m_instance;
 
+    [Header("Game Properties")]
     [SerializeField] GameState m_state;
     [SerializeField] Vector2 m_vertical;
     [SerializeField] Vector2 m_horizontal;
+    
+    [Header("Game Preferences")]
+    [SerializeField] Transform m_mapHolder;
+    [SerializeField] Character m_playerPrefab;
+    [SerializeField] GameObject m_packagePrefab;
+    [SerializeField] GameObject m_obstaclePrefab;
 
+    [Header("Game Data")]
+    [SerializeField] int m_score;
+    [SerializeField] int m_bestScore;
+    [SerializeField] int m_spawnAmount;
+    [SerializeField] float m_currentHeight;
+    [SerializeField] float m_spawnHeightDiff;
+
+    private Character m_player;
+
+    public GameState State => m_state;
     public Vector2 Vertical => m_vertical;
     public Vector2 Horizontal => m_horizontal;
 
@@ -39,9 +56,23 @@ public class GameManager : MonoBehaviour
     {
         if (m_state != GameState.Playing) return;
 
-        
+        if (m_player.transform.position.y > m_currentHeight / 2)
+        {
+            SpawnMap();
+        }
     }
 
+    private void ResetGameData()
+    {
+        m_score = 0;
+        m_currentHeight = 0;
+        Camera.main.transform.position = new Vector3(0, 0, -10);
+
+        for (int i = 0; i < m_mapHolder.childCount; i++)
+        {
+            Destroy(m_mapHolder.GetChild(i).gameObject);
+        }
+    }
     private void CalculateScreenSize()
     {
         var bottomLeft = Camera.main.ScreenToWorldPoint(Vector2.zero);
@@ -50,25 +81,66 @@ public class GameManager : MonoBehaviour
         m_vertical = new Vector2(bottomLeft.y, upperRight.y);
         m_horizontal = new Vector2(bottomLeft.x, upperRight.x);
     }
+    private void SpawnMap()
+    {
+        for (int i = 0; i < m_spawnAmount; i++)
+        {
+            var obstacle = Instantiate(m_obstaclePrefab,
+                                       new Vector3(0f, m_currentHeight, 0f),
+                                       Quaternion.identity,
+                                       m_mapHolder);
+            var package = Instantiate(m_packagePrefab,
+                                      new Vector3(0f, m_currentHeight + m_spawnHeightDiff / 2, 0f),
+                                      Quaternion.identity,
+                                      m_mapHolder);
+            m_currentHeight += m_spawnHeightDiff;
+        }
+    }
+
+    public void SetCharacterVisualID(int characterVisualID)
+    {
+        m_player.InitializeCharacter(characterVisualID);
+    }
+    public void ScorePoint()
+    {
+        m_score++;
+        SoundManager.Instance.PlaySound("Score");
+        MenuManager.Instance.SetScoreInGame(m_score);
+    }
 
     public void StartGame()
     {
         Debug.LogWarning("Start Game");
+
+        ResetGameData();
         m_state = GameState.Playing;
+        m_mapHolder.gameObject.SetActive(true);
+
+        SpawnMap();
+        m_player = Instantiate(m_playerPrefab, m_mapHolder);
     }
     public void PauseGame()
     {
         Debug.LogWarning("Pause Game");
+
         m_state = GameState.Pausing;
+        m_mapHolder.gameObject.SetActive(false);
     }
     public void ResumeGame()
     {
         Debug.LogWarning("Resume Game");
+
         m_state = GameState.Playing;
+        m_mapHolder.gameObject.SetActive(true);
     }
     public void EndGame()
     {
         Debug.LogWarning("End Game");
+
         m_state = GameState.End;
+        m_mapHolder.gameObject.SetActive(false);
+
+        ResetGameData();
+        MenuManager.Instance.EndGame();
     }
 }

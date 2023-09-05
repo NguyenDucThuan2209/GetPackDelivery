@@ -22,6 +22,6 @@ public class EndGameScreen : UIScreen
     public void OnReplayButtonPressed()
     {
         SoundManager.Instance.PlaySound("Click");
-        MenuManager.Instance.ReplayGame();
+        MenuManager.Instance.StartGame();
     }
 }

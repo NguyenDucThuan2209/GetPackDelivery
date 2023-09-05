@@ -42,20 +42,20 @@ public class SoundManager : MonoBehaviour
     public void PlayMusic(string name)
     {
         var audio = Array.Find(m_musicAudio, audio => audio.Name == name);
-        m_musicSource.clip = audio.Clip;
+        m_musicSource.clip = audio?.Clip;
         m_musicSource.Play();
     }
     public void PlaySound(string name)
     {
         var audio = Array.Find(m_soundAudio, audio => audio.Name == name);
-        m_soundSource.PlayOneShot(audio.Clip);
+        m_soundSource.PlayOneShot(audio?.Clip);
     }
-    public void SetMusicState(bool isMute)
+    public void SetMusicState(float value)
     {
-        m_musicSource.mute = isMute;
+        m_musicSource.volume = value;
     }
-    public void SetSoundState(bool isMute)
+    public void SetSoundState(float value)
     {
-        m_soundSource.mute = isMute;
+        m_soundSource.volume = value;
     }
 }

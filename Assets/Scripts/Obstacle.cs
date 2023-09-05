@@ -4,14 +4,28 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
+    [SerializeField] float m_slideSpeed;
+    [SerializeField] float m_slideDuration;
+
     [SerializeField] Vector2 m_leftMovement;
     [SerializeField] Vector2 m_rightMovement;
+    
     [SerializeField] Transform m_left;
     [SerializeField] Transform m_right;
-    [SerializeField] float m_slideDuration;
 
     private bool m_isClosing;
     private float m_timeCount = 0;
+
+    public float SlideSpeed
+    {
+        get => m_slideSpeed;
+        set => m_slideSpeed = value;
+    }
+    public float SlideDuration
+    {
+        get => m_slideDuration;
+        set => m_slideDuration = value;
+    }
 
     private void Start()
     {
@@ -27,7 +41,7 @@ public class Obstacle : MonoBehaviour
             {
                 m_left.localPosition = Vector2.Lerp(new Vector2(m_leftMovement.x, 0), new Vector2(m_leftMovement.y, 0), m_timeCount / m_slideDuration);
                 m_right.localPosition = Vector2.Lerp(new Vector2(m_rightMovement.x, 0), new Vector2(m_rightMovement.y, 0), m_timeCount / m_slideDuration);
-                m_timeCount += Time.deltaTime;
+                m_timeCount += Time.deltaTime * m_slideSpeed;
             }
             else
             {
@@ -41,7 +55,7 @@ public class Obstacle : MonoBehaviour
             {
                 m_left.localPosition = Vector2.Lerp(new Vector2(m_leftMovement.y, 0), new Vector2(m_leftMovement.x, 0), m_timeCount / m_slideDuration);
                 m_right.localPosition = Vector2.Lerp(new Vector2(m_rightMovement.y, 0), new Vector2(m_rightMovement.x, 0), m_timeCount / m_slideDuration);
-                m_timeCount += Time.deltaTime;
+                m_timeCount += Time.deltaTime * m_slideSpeed;
             }
             else
             {
@@ -49,6 +63,5 @@ public class Obstacle : MonoBehaviour
                 m_isClosing = true;
             }
         }
-        
     }
 }
