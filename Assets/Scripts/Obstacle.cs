@@ -12,12 +12,12 @@ public class Obstacle : MonoBehaviour
 
     private bool m_isClosing;
     private float m_timeCount = 0;
-    private float m_startRatio = 0.3f;
 
     private void Start()
     {
-        m_left.localPosition = Vector2.Lerp(new Vector2(m_leftMovement.x, 0), new Vector2(m_leftMovement.y, 0), m_startRatio);
-        m_right.localPosition = Vector2.Lerp(new Vector2(m_rightMovement.x, 0), new Vector2(m_rightMovement.y, 0), m_startRatio);
+        var startRatio = Random.value;
+        m_timeCount = m_slideDuration * startRatio;
+        m_isClosing = (startRatio < 0.5f) ? true : false;
     }
     private void Update()
     {
@@ -50,11 +50,5 @@ public class Obstacle : MonoBehaviour
             }
         }
         
-    }
-
-    public void SetupObstacle(int startRatio, bool isClosing)
-    {
-        m_startRatio = startRatio;
-        m_isClosing = isClosing;
     }
 }

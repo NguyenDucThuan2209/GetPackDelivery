@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
         }
 
         m_instance = this;
+
+        CalculateScreenSize();
     }
     private void Update()
     {
@@ -40,7 +42,15 @@ public class GameManager : MonoBehaviour
         
     }
 
-    
+    private void CalculateScreenSize()
+    {
+        var bottomLeft = Camera.main.ScreenToWorldPoint(Vector2.zero);
+        var upperRight = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
+        m_vertical = new Vector2(bottomLeft.y, upperRight.y);
+        m_horizontal = new Vector2(bottomLeft.x, upperRight.x);
+    }
+
     public void StartGame()
     {
         Debug.LogWarning("Start Game");
